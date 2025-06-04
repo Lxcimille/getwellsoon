@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'mood_tracker_journal_menu.dart';
+import 'article_menu.dart';
+import 'meditation.dart';
+import 'music.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +19,14 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
         primarySwatch: Colors.blue,
       ),
-      home: const LandingPage(),
+      initialRoute: '/home',
+      routes: {
+        '/home': (context) => const LandingPage(),
+        '/mood_tracker': (context) => const MoodTrackerApp(),
+        '/article': (context) => const ArticlesApp(),
+        '/meditation': (context) => const MeditationTimerPage(),
+        '/music': (context) => const MusicListApp(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
@@ -31,6 +41,7 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,18 +78,46 @@ class _LandingPageState extends State<LandingPage> {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children: const [
-          DrawerHeader(
+        children: [
+          const DrawerHeader(
             decoration: BoxDecoration(color: Color(0xFF2E549A)),
             child: Text(
               'Menu',
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
-          ListTile(leading: Icon(Icons.mood), title: Text('Mood Tracker')),
-          ListTile(leading: Icon(Icons.book), title: Text('Journal Log')),
-          ListTile(leading: Icon(Icons.self_improvement), title: Text('Meditation')),
-          ListTile(leading: Icon(Icons.music_note), title: Text('Music')),
+          ListTile(
+            leading: const Icon(Icons.mood),
+            title: const Text('Mood Tracker'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/mood_tracker');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.book),
+            title: const Text('Journal Log'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/mood_tracker');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.self_improvement),
+            title: const Text('Meditation'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/meditation');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.music_note),
+            title: const Text('Music'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/music');
+            },
+          ),
         ],
       ),
     );
@@ -103,7 +142,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
         GestureDetector(
           onTap: () {
-            // Add your action for avatar button here
+            Navigator.pushNamed(context, '/article');
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
@@ -149,10 +188,7 @@ class _LandingPageState extends State<LandingPage> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MoodTrackerPage()),
-                );
+                Navigator.pushNamed(context, '/mood_tracker');
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -223,11 +259,17 @@ class _LandingPageState extends State<LandingPage> {
               6,
               (index) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: DottedBorder(
-                  color: const Color(0xFF6B7280),
-                  strokeWidth: 1,
-                  dashPattern: [4, 4],
-                  child: Container(height: 1),
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: const Color(0xFF6B7280),
+                        width: 1,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -254,10 +296,7 @@ class _LandingPageState extends State<LandingPage> {
         Positioned.fill(
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NoteDetailPage()),
-              );
+              Navigator.pushNamed(context, '/mood_tracker');
             },
             child: Container(color: Colors.transparent),
           ),
@@ -294,38 +333,43 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildRecommendationCard({required String imageUrl, required String title}) {
-    return Container(
-      width: 220,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF2E549A), width: 4),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(
-            imageUrl,
-            height: 120,
-            width: double.infinity,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '/article');
+      },
+      child: Container(
+        width: 220,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF2E549A), width: 4),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.network(
+              imageUrl,
               height: 120,
-              color: Colors.grey[300],
-              child: const Icon(Icons.image),
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 120,
+                color: Colors.grey[300],
+                child: const Icon(Icons.image),
+              ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            color: const Color(0xFF2E549A),
-            child: Text(
-              title,
-              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              color: const Color(0xFF2E549A),
+              child: Text(
+                title,
+                style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -336,58 +380,153 @@ class _LandingPageState extends State<LandingPage> {
       color: const Color(0xFF2E549A),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: const [
-          Icon(Icons.home, color: Colors.white),
-          Icon(Icons.edit, color: Colors.white),
-          Icon(Icons.save, color: Colors.white),
-          Icon(Icons.coffee, color: Colors.white),
-          Icon(Icons.power_settings_new, color: Colors.white),
-        ],
-      ),
-    );
-  }
-}
-
-class NoteDetailPage extends StatelessWidget {
-  const NoteDetailPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Catatan Hari Ini'),
-        backgroundColor: const Color(0xFF2E549A),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: TextField(
-          maxLines: null,
-          autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Tulis catatanmu di sini...',
-            border: OutlineInputBorder(),
+        children: [
+          // Home button
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.home,
+                  color: _currentIndex == 0 ? Colors.white : Colors.white70,
+                  size: 24,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 0;
+                  });
+                  Navigator.pushNamedAndRemoveUntil(
+                    context, 
+                    '/home', 
+                    (route) => false,
+                  );
+                },
+              ),
+              if (_currentIndex == 0)
+                Container(
+                  height: 2,
+                  width: 20,
+                  color: Colors.white,
+                ),
+            ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MoodTrackerPage extends StatelessWidget {
-  const MoodTrackerPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mood Tracker'),
-        backgroundColor: const Color(0xFF2E549A),
-      ),
-      body: const Center(
-        child: Text(
-          'This is the Mood Tracker Page.',
-          style: TextStyle(fontSize: 18),
-        ),
+          
+          // Journal button
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: _currentIndex == 1 ? Colors.white : Colors.white70,
+                  size: 24,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 1;
+                  });
+                  Navigator.pushNamed(
+                    context,
+                    '/mood_tracker',
+                  );
+                },
+              ),
+              if (_currentIndex == 1)
+                Container(
+                  height: 2,
+                  width: 20,
+                  color: Colors.white,
+                ),
+            ],
+          ),
+          
+          // Articles button
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.bookmark,
+                  color: _currentIndex == 2 ? Colors.white : Colors.white70,
+                  size: 24,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 2;
+                  });
+                  Navigator.pushNamed(
+                    context,
+                    '/article',
+                  );
+                },
+              ),
+              if (_currentIndex == 2)
+                Container(
+                  height: 2,
+                  width: 20,
+                  color: Colors.white,
+                ),
+            ],
+          ),
+          
+          // Meditation button
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.self_improvement,
+                  color: _currentIndex == 3 ? Colors.white : Colors.white70,
+                  size: 24,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 3;
+                  });
+                  Navigator.pushNamed(
+                    context,
+                    '/meditation',
+                  );
+                },
+              ),
+              if (_currentIndex == 3)
+                Container(
+                  height: 2,
+                  width: 20,
+                  color: Colors.white,
+                ),
+            ],
+          ),
+          
+          // Music button
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.music_note,
+                  color: _currentIndex == 4 ? Colors.white : Colors.white70,
+                  size: 24,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _currentIndex = 4;
+                  });
+                  Navigator.pushNamed(
+                    context,
+                    '/music',
+                  );
+                },
+              ),
+              if (_currentIndex == 4)
+                Container(
+                  height: 2,
+                  width: 20,
+                  color: Colors.white,
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

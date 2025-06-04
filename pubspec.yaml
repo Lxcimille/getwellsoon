@@ -25,6 +25,13 @@ flutter:
   assets:
     - assets/icons/google_icon.png  # For Google login button
     - assets/icons/Logo.png         # App logo
+    - assets/icons/main/
+    - assets/icons/happy/
+    - assets/icons/navbar/
+    - assets/icons/angry/
+    - assets/icons/neutral/
+    - assets/icons/sad/
+
 
   fonts:
     - family: Poppins

@@ -1,30 +1,64 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';  // Import your separated screen files
+import 'login_screen.dart';
 import 'register_screen.dart';
 import 'landing_page.dart';
+import 'mood_tracker_journal_menu.dart';
+import 'journal_editor.dart';
+import 'journal_log.dart';
+import 'article_menu.dart';
+import 'meditation.dart';
+import 'music.dart';
+import 'models/journalentry.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Authentication UI',
+      title: 'GetWellSoon App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'Poppins',
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => const LoginScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegistrationScreen(),
-        '/landingpage': (context) => const LandingPage(),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (context) => const LoginScreen());
+          case '/login':
+            return MaterialPageRoute(builder: (context) => const LoginScreen());
+          case '/register':
+            return MaterialPageRoute(builder: (context) => const RegistrationScreen());
+          case '/landingpage':
+            return MaterialPageRoute(builder: (context) => const LandingPage());
+          case '/mood_tracker_journal':
+            return MaterialPageRoute(builder: (context) => const MoodTrackerApp());
+          case '/journal_log':
+            return MaterialPageRoute(builder: (context) => const JournalLogPage());
+          case '/journal_editor':
+            // Handle arguments for journal editor
+            final args = settings.arguments as Map<String, dynamic>?;
+            return MaterialPageRoute(
+              builder: (context) => JournalEditorScreen(
+                onSave: args?['onSave'],
+                existingEntry: args?['existingEntry'],
+              ),
+            );
+          case '/article_menu':
+            return MaterialPageRoute(builder: (context) => const ArticlesApp());
+          case '/meditation':
+            return MaterialPageRoute(builder: (context) => const MeditationTimerPage());
+          case '/music':
+            return MaterialPageRoute(builder: (context) => const MusicListApp());
+          default:
+            return MaterialPageRoute(builder: (context) => const LoginScreen());
+        }
       },
     );
   }
