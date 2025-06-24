@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'models/journalentry.dart';
+import 'journal_editor.dart';
+import 'landing_page.dart';
+import 'article_menu.dart';
+import 'meditation.dart';
+import 'music.dart';
 
 class JournalLogPage extends StatefulWidget {
   const JournalLogPage({super.key});
@@ -9,6 +14,7 @@ class JournalLogPage extends StatefulWidget {
 }
 
 class _JournalLogPageState extends State<JournalLogPage> {
+  int _selectedIndex = 1; // Set to 1 since this is the journal screen
   List<JournalEntry> journalEntries = [];
 
   void _addJournalEntry(JournalEntry entry) {
@@ -23,13 +29,135 @@ class _JournalLogPageState extends State<JournalLogPage> {
     });
   }
 
-  void _navigateToEditor() async {
-    await Navigator.pushNamed(
+  void _navigateToEditor({JournalEntry? existingEntry}) async {
+    await Navigator.push(
       context,
-      '/journal_editor',
-      arguments: {
-        'onSave': _addJournalEntry,
-      },
+      MaterialPageRoute(
+        builder: (context) => JournalEditorScreen(
+          onSave: _addJournalEntry,
+          existingEntry: existingEntry,
+        ),
+      ),
+    );
+  }
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Navigate to different screens based on index
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LandingPage()),
+        );
+        break;
+      case 1:
+        // Already on journal screen, no navigation needed
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ArticlesApp()),
+        );
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MeditationApp()),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MusicListApp()),
+        );
+        break;
+    }
+  }
+
+  Widget _buildCustomIcon(String assetPath, int index) {
+    bool isSelected = _selectedIndex == index;
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Image.asset(
+        assetPath,
+        width: 24,
+        height: 24,
+        color: isSelected ? Colors.white : Colors.white70,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(
+            _getDefaultIcon(index),
+            color: isSelected ? Colors.white : Colors.white70,
+            size: 24,
+          );
+        },
+      ),
+    );
+  }
+
+  IconData _getDefaultIcon(int index) {
+    switch (index) {
+      case 0:
+        return Icons.home;
+      case 1:
+        return Icons.book;
+      case 2:
+        return Icons.article;
+      case 3:
+        return Icons.self_improvement;
+      case 4:
+        return Icons.music_note;
+      default:
+        return Icons.circle;
+    }
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xFF4a7ab8),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 28,
+        items: [
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/home.png', 0),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/journal_tracker.png', 1),
+            label: 'Journal',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/article.png', 2),
+            label: 'Article',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/meditation.png', 3),
+            label: 'Meditation',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/music.png', 4),
+            label: 'Music',
+          ),
+        ],
+      ),
     );
   }
 
@@ -39,54 +167,14 @@ class _JournalLogPageState extends State<JournalLogPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 24.0, right: 8.0),
         child: FloatingActionButton(
-          onPressed: _navigateToEditor,
+          onPressed: () => _navigateToEditor(),
           backgroundColor: Colors.white,
           elevation: 6,
           child: const Icon(Icons.add, size: 32, color: Color(0xFF2F5497)),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-
-      bottomNavigationBar: BottomAppBar(
-        color: const Color(0xFF2F5497),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.home, color: Colors.white),
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/landingpage',
-                  (route) => false,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit, color: Colors.white),
-                onPressed: _navigateToEditor,
-              ),
-              IconButton(
-                icon: const Icon(Icons.menu_book, color: Colors.white),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.local_cafe, color: Colors.white),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.power_settings_new, color: Colors.white),
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/login',
-                  (route) => false,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-
+      bottomNavigationBar: _buildBottomNavigationBar(),
       body: SafeArea(
         child: Column(
           children: [
@@ -174,7 +262,7 @@ class _JournalLogPageState extends State<JournalLogPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: Text(
-                          'Record your journal by pressing the '' button!',
+                          "Record your journal by pressing the '+' button!",
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
@@ -189,17 +277,7 @@ class _JournalLogPageState extends State<JournalLogPage> {
                           margin: const EdgeInsets.only(bottom: 12),
                           elevation: 2,
                           child: InkWell(
-                            onTap: () {
-                              // Navigate to editor with existing entry for editing
-                              Navigator.pushNamed(
-                                context,
-                                '/journal_editor',
-                                arguments: {
-                                  'onSave': _addJournalEntry,
-                                  'existingEntry': entry,
-                                },
-                              );
-                            },
+                            onTap: () => _navigateToEditor(existingEntry: entry),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
                               child: Column(

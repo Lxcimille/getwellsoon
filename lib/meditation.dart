@@ -45,6 +45,7 @@ class _MeditationTimerPageState extends State<MeditationTimerPage> {
   bool _isRunning = false;
   late Timer _timer;
   bool _showSettings = false;
+  int _selectedIndex = 3; // Set to 3 since this is the meditation screen
 
   @override
   void dispose() {
@@ -86,8 +87,102 @@ class _MeditationTimerPageState extends State<MeditationTimerPage> {
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
-  void _navigateToPage(String routeName) {
-    Navigator.pushNamed(context, routeName);
+  Widget _buildCustomIcon(String assetPath, int index) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: _selectedIndex == index ? Colors.white.withOpacity(0.2) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Image.asset(
+        assetPath,
+        width: 24,
+        height: 24,
+        color: _selectedIndex == index ? Colors.white : Colors.white70,
+      ),
+    );
+  }
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // Navigate to different screens based on index
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LandingPage()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MoodTrackerScreen()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ArticlesApp()),
+        );
+        break;
+      case 3:
+        // Already on meditation screen, no navigation needed
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MusicListApp()),
+        );
+        break;
+    }
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xFF4a7ab8),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 28,
+        items: [
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/home.png', 0),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/journal_tracker.png', 1),
+            label: 'Journal',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/article.png', 2),
+            label: 'Article',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/meditation.png', 3),
+            label: 'Meditation',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/music.png', 4),
+            label: 'Music',
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -303,66 +398,7 @@ class _MeditationTimerPageState extends State<MeditationTimerPage> {
             ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color(0xFF2D5D9F),
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.home, size: 28),
-                color: Colors.white,
-                onPressed: () => _navigateToPage('/home'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit, size: 28),
-                color: Colors.white,
-                onPressed: () => _navigateToPage('/mood_tracker'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.save, size: 28),
-                color: Colors.white,
-                onPressed: () => _navigateToPage('/articles'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.coffee, size: 28),
-                color: Colors.white,
-                onPressed: () => _navigateToPage('/music'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.power_settings_new, size: 28),
-                color: Colors.white,
-                onPressed: () {
-                  // Exit app or logout functionality
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Exit App'),
-                        content: Text('Are you sure you want to exit?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // Exit app logic here
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('Exit'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 }

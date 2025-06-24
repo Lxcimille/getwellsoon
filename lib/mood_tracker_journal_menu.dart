@@ -1,80 +1,90 @@
 import 'package:flutter/material.dart';
-import 'landing_page.dart';
 import 'article_menu.dart';
+import 'landing_page.dart';
 import 'meditation.dart';
 import 'music.dart';
+import 'journal_log.dart';
+import 'mood_log.dart';
 
 void main() {
-  runApp(const MoodTrackerApp());
+  runApp(const MoodTrackerScreen());
 }
 
-class MoodTrackerApp extends StatelessWidget {
-  const MoodTrackerApp({super.key});
+class MoodTrackerScreen extends StatelessWidget {
+  const MoodTrackerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mood Tracker',
+      title: 'Mood Menu',
       theme: ThemeData(
-        fontFamily: 'Poppins',
+        fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/mood_tracker',
-      routes: {
-        '/home': (context) => const LandingPage(),
-        '/mood_tracker': (context) => const MoodTrackerScreen(),
-        '/articles': (context) => const ArticlesApp(),
-        '/meditation': (context) => const MeditationTimerPage(),
-        '/music': (context) => const MusicListApp(),
-      },
+      home: const MoodMenuScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MoodTrackerScreen extends StatefulWidget {
-  const MoodTrackerScreen({super.key});
+class MoodMenuScreen extends StatefulWidget {
+  const MoodMenuScreen({super.key});
 
   @override
-  State<MoodTrackerScreen> createState() => _MoodTrackerScreenState();
+  State<MoodMenuScreen> createState() => _MoodMenuScreenState();
 }
 
-class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
-  int _selectedIndex = 1; // Default to mood tracker (index 1)
+class _MoodMenuScreenState extends State<MoodMenuScreen> {
+  int _selectedIndex = 1; // Set to 1 since this is the journal tracker screen
   String _selectedMood = 'Happy';
   bool _showOkButton = false;
 
   final List<Map<String, dynamic>> _mainMoods = [
-    {'emoji': '😊', 'color': Color(0xFF4a7ab8), 'label': 'Happy'},
-    {'emoji': '😐', 'color': Color(0xFF3a5f9a), 'label': 'Neutral'},
-    {'emoji': '😠', 'color': Color(0xFF3a5f9a), 'label': 'Angry'},
-    {'emoji': '😢', 'color': Color(0xFF3a5f9a), 'label': 'Sad'},
+    {'emoji': 'assets/icons/main/happy.png', 'color': Color(0xFF4a7ab8), 'label': 'Happy'},
+    {'emoji': 'assets/icons/main/neutral.png', 'color': Color(0xFF3a5f9a), 'label': 'Neutral'},
+    {'emoji': 'assets/icons/main/angry.png', 'color': Color(0xFF3a5f9a), 'label': 'Angry'},
+    {'emoji': 'assets/icons/main/sad.png', 'color': Color(0xFF3a5f9a), 'label': 'Sad'},
   ];
 
+  // Organized detailed moods by category
   final Map<String, List<Map<String, String>>> _categorizedDetailedMoods = {
     'Happy': [
-      {'emoji': '😄', 'label': 'Joyful'},
-      {'emoji': '🤩', 'label': 'Excited'},
-      {'emoji': '😇', 'label': 'Grateful'},
-      {'emoji': '😜', 'label': 'Silly'},
+      {'emoji': 'assets/icons/happy/joyful.png', 'label': 'Joyful'},
+      {'emoji': 'assets/icons/happy/excited.png', 'label': 'Excited'},
+      {'emoji': 'assets/icons/happy/grateful.png', 'label': 'Grateful'},
+      {'emoji': 'assets/icons/happy/silly.png', 'label': 'Silly'},
+      {'emoji': 'assets/icons/happy/funny.png', 'label': 'Funny'},
+      {'emoji': 'assets/icons/happy/lovely.png', 'label': 'Lovely'},
+      {'emoji': 'assets/icons/happy/ambitious.png', 'label': 'Ambitious'},
+      {'emoji': 'assets/icons/happy/cool.png', 'label': 'Cool'},
+      {'emoji': 'assets/icons/happy/mischievous.png', 'label': 'Mischievous'},
+      {'emoji': 'assets/icons/happy/happy.png', 'label': 'happy'},
     ],
     'Neutral': [
-      {'emoji': '🤔', 'label': 'Thinking'},
-      {'emoji': '😌', 'label': 'Calm'},
-      {'emoji': '😶', 'label': 'Neutral'},
-      {'emoji': '🙂', 'label': 'Slightly Happy'},
+      {'emoji': 'assets/icons/neutral/calm.png', 'label': 'Calm'},
+      {'emoji': 'assets/icons/neutral/dizzy.png', 'label': 'Dizzy'},
+      {'emoji': 'assets/icons/neutral/embarrassed.png', 'label': 'Embarrassed'},
+      {'emoji': 'assets/icons/neutral/nervous.png', 'label': 'Nervous'},
+      {'emoji': 'assets/icons/neutral/neutral.png', 'label': 'Neutral'},
+      {'emoji': 'assets/icons/neutral/relieved.png', 'label': 'Relieved'},
+      {'emoji': 'assets/icons/neutral/shocked.png', 'label': 'Shocked'},
+      {'emoji': 'assets/icons/neutral/shy.png', 'label': 'Shy'},
+      {'emoji': 'assets/icons/neutral/sleepy.png', 'label': 'Sleepy'},
+      {'emoji': 'assets/icons/neutral/thinking.png', 'label': 'Thinking'},
     ],
     'Angry': [
-      {'emoji': '😡', 'label': 'Angry'},
-      {'emoji': '🤬', 'label': 'Rage'},
-      {'emoji': '😤', 'label': 'Frustrated'},
-      {'emoji': '👿', 'label': 'Devilish'},
+      {'emoji': 'assets/icons/angry/angry.png', 'label': 'angry'},
+      {'emoji': 'assets/icons/angry/rage.png', 'label': 'rage'},
+      {'emoji': 'assets/icons/angry/annoyed.png', 'label': 'Annoyed'},
+      {'emoji': 'assets/icons/angry/irritated.png', 'label': 'Irritated'},
+      {'emoji': 'assets/icons/angry/mad.png', 'label': 'Mad'}
     ],
     'Sad': [
-      {'emoji': '😞', 'label': 'Disappointed'},
-      {'emoji': '😔', 'label': 'Sad'},
-      {'emoji': '😟', 'label': 'Worried'},
-      {'emoji': '😢', 'label': 'Crying'},
+      {'emoji': 'assets/icons/sad/disappointed.png', 'label': 'Disappointed'},
+      {'emoji': 'assets/icons/sad/sad.png', 'label': 'Sad'},
+      {'emoji': 'assets/icons/sad/sobbing.png', 'label': 'Sobbing'},
+      {'emoji': 'assets/icons/sad/terrible.png', 'label': 'Terrible'},
+      {'emoji': 'assets/icons/sad/worried.png', 'label': 'Worried'}
     ],
   };
 
@@ -83,21 +93,34 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
       _selectedIndex = index;
     });
 
+    // Navigate to different screens based on index
     switch (index) {
       case 0:
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LandingPage()),
+        );
         break;
       case 1:
-        // Already on mood tracker
+        // Already on journal tracker screen, no navigation needed
         break;
       case 2:
-        Navigator.pushNamed(context, '/articles');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ArticlesApp()),
+        );
         break;
       case 3:
-        Navigator.pushNamed(context, '/meditation');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MeditationApp()),
+        );
         break;
       case 4:
-        Navigator.pushNamed(context, '/music');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MusicListApp()),
+        );
         break;
     }
   }
@@ -105,14 +128,14 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
   void _onMoodSelected(String mood) {
     setState(() {
       _selectedMood = mood;
-      _showOkButton = false;
+      _showOkButton = false; // Don't show OK for main mood categories
     });
   }
 
   void _onDetailedMoodSelected(String mood) {
     setState(() {
       _selectedMood = mood;
-      _showOkButton = true;
+      _showOkButton = true; // Show OK only for detailed moods
     });
   }
 
@@ -120,35 +143,106 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
     setState(() {
       _showOkButton = false;
     });
+    // Handle mood confirmation action
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Mood "$_selectedMood" confirmed!')),
     );
   }
 
   String _getCurrentMainCategory() {
+    // If selected mood is a main category, return it
     if (_categorizedDetailedMoods.containsKey(_selectedMood)) {
       return _selectedMood;
     }
+    
+    // If it's a detailed mood, find which category it belongs to
     for (String category in _categorizedDetailedMoods.keys) {
-      if (_categorizedDetailedMoods[category]!
-          .any((mood) => mood['label'] == _selectedMood)) {
+      final detailedMoods = _categorizedDetailedMoods[category]!;
+      if (detailedMoods.any((mood) => mood['label'] == _selectedMood)) {
         return category;
       }
     }
+    
+    // Default to Happy
     return 'Happy';
   }
 
   List<Map<String, String>> _getCurrentDetailedMoods() {
+    // Check if the selected mood is a main category
     if (_categorizedDetailedMoods.containsKey(_selectedMood)) {
       return _categorizedDetailedMoods[_selectedMood]!;
     }
+    
+    // If it's a detailed mood, find which category it belongs to
     for (String category in _categorizedDetailedMoods.keys) {
-      if (_categorizedDetailedMoods[category]!
-          .any((mood) => mood['label'] == _selectedMood)) {
-        return _categorizedDetailedMoods[category]!;
+      final detailedMoods = _categorizedDetailedMoods[category]!;
+      if (detailedMoods.any((mood) => mood['label'] == _selectedMood)) {
+        return detailedMoods;
       }
     }
+    
+    // Default to Happy if nothing matches
     return _categorizedDetailedMoods['Happy']!;
+  }
+
+  Widget _buildEmojiImage(String path, double size) {
+    return Image.asset(
+      path,
+      width: size,
+      height: size,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(size / 4),
+          ),
+          child: Icon(
+            Icons.mood,
+            size: size * 0.6,
+            color: Colors.grey[600],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCustomIcon(String assetPath, int index) {
+    bool isSelected = _selectedIndex == index;
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Image.asset(
+        assetPath,
+        width: 24,
+        height: 24,
+        color: isSelected ? Colors.white : Colors.white70,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(
+            _getDefaultIcon(index),
+            color: isSelected ? Colors.white : Colors.white70,
+            size: 24,
+          );
+        },
+      ),
+    );
+  }
+
+  IconData _getDefaultIcon(int index) {
+    switch (index) {
+      case 0:
+        return Icons.home;
+      case 1:
+        return Icons.book;
+      case 2:
+        return Icons.article;
+      case 3:
+        return Icons.self_improvement;
+      case 4:
+        return Icons.music_note;
+      default:
+        return Icons.circle;
+    }
   }
 
   @override
@@ -156,25 +250,19 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildMoodMenuSection(),
-                      const SizedBox(height: 24),
-                      _buildTodaysNotesSection(),
-                      const SizedBox(height: 24),
-                      _buildVoiceSection(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildMoodMenuSection(),
+                const SizedBox(height: 24),
+                _buildTodaysNotesSection(),
+                const SizedBox(height: 24),
+                _buildVoiceSection(),
+              ],
+            ),
           ),
         ),
       ),
@@ -183,6 +271,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
   }
 
   Widget _buildMoodMenuSection() {
+    // Get the detailed moods for current category
     final currentDetailedMoods = _getCurrentDetailedMoods();
     
     return Container(
@@ -207,8 +296,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Mood logged!')),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MoodLogPage()),
                   );
                 },
                 child: const Text(
@@ -223,25 +313,34 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
             ],
           ),
           const SizedBox(height: 16),
+          // Main mood selector
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: _mainMoods.map((mood) {
               bool isSelected = _getCurrentMainCategory() == mood['label'];
               return GestureDetector(
                 onTap: () => _onMoodSelected(mood['label']),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF4a7ab8) : const Color(0xFF3a5f9a),
-                    borderRadius: BorderRadius.circular(12),
-                    border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
-                  ),
-                  child: Center(
-                    child: Text(
-                      mood['emoji'],
-                      style: TextStyle(fontSize: 32),
+                child: AnimatedScale(
+                  scale: isSelected ? 1.0 : 0.95,
+                  duration: const Duration(milliseconds: 150),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: isSelected ? const Color(0xFF4a7ab8) : const Color(0xFF3a5f9a),
+                      borderRadius: BorderRadius.circular(12),
+                      border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
+                      boxShadow: isSelected ? [
+                        BoxShadow(
+                          color: Colors.white.withOpacity(0.3),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ] : null,
+                    ),
+                    child: Center(
+                      child: _buildEmojiImage(mood['emoji'], 48),
                     ),
                   ),
                 ),
@@ -249,6 +348,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
             }).toList(),
           ),
           const SizedBox(height: 16),
+          // Detailed mood grid - now shows category-specific moods
           Container(
             decoration: BoxDecoration(
               color: const Color(0xFF3a5f9a),
@@ -259,7 +359,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
+                crossAxisCount: 5,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 0.8,
@@ -270,40 +370,42 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                 bool isSelectedDetailed = mood['label'] == _selectedMood;
                 return GestureDetector(
                   onTap: () => _onDetailedMoodSelected(mood['label']!),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    decoration: BoxDecoration(
-                      color: isSelectedDetailed ? const Color(0xFF4a7ab8).withOpacity(0.3) : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8),
-                      border: isSelectedDetailed ? Border.all(color: Colors.white, width: 1) : null,
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          mood['emoji']!,
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          mood['label']!,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: isSelectedDetailed ? FontWeight.w700 : FontWeight.w600,
+                  child: AnimatedScale(
+                    scale: isSelectedDetailed ? 1.1 : 1.0,
+                    duration: const Duration(milliseconds: 150),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        color: isSelectedDetailed ? const Color(0xFF4a7ab8).withOpacity(0.3) : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        border: isSelectedDetailed ? Border.all(color: Colors.white, width: 1) : null,
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildEmojiImage(mood['emoji']!, 32),
+                          const SizedBox(height: 4),
+                          Text(
+                            mood['label']!,
+                            style: TextStyle(
+                              color: isSelectedDetailed ? Colors.white : Colors.white,
+                              fontSize: 10,
+                              fontWeight: isSelectedDetailed ? FontWeight.w700 : FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
               },
             ),
           ),
+          // OK Button - appears when mood is selected
           if (_showOkButton) ...[
             const SizedBox(height: 16),
             Center(
@@ -345,54 +447,45 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
           ),
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                width: double.infinity,
-                height: 1,
-                color: const Color(0xFF4a7ab8).withOpacity(0.3),
-                margin: const EdgeInsets.symmetric(vertical: 8),
-              ),
-              const Text(
-                'Add a Note, or start with a prompt.',
-                style: TextStyle(
-                  color: Color(0xFF7a6f5f),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                padding: const EdgeInsets.only(bottom: 16),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Color(0xFF7a6f5f), width: 1),
+                  ),
+                ),
+                child: const Text(
+                  'Add a Note, or start with a prompt.',
+                  style: TextStyle(
+                    color: Color(0xFF7a6f5f),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                height: 1,
-                color: const Color(0xFF4a7ab8).withOpacity(0.3),
-                margin: const EdgeInsets.symmetric(vertical: 8),
-              ),
-              ...List.generate(4, (index) => Container(
-                width: double.infinity,
-                height: 1,
-                color: const Color(0xFF4a7ab8).withOpacity(0.3),
-                margin: const EdgeInsets.symmetric(vertical: 8),
-              )),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Starting writing mode...')),
+                    Navigator.push( 
+                      context,
+                        MaterialPageRoute(builder: (context) => const JournalLogPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4a7ab8),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    elevation: 2,
                   ),
                   child: const Text(
                     'Start Writing',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -405,19 +498,19 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
           top: -12,
           left: 0,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             decoration: const BoxDecoration(
               color: Color(0xFF4a7ab8),
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(16),
-                bottomRight: Radius.circular(16),
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
               ),
             ),
             child: const Text(
               "Today's Notes:",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -431,51 +524,38 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF4a7ab8),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(16),
+      child: Row(
         children: [
-          Row(
-            children: [
-              const Icon(Icons.mic, color: Colors.white, size: 28),
-              const SizedBox(width: 12),
-              const Text(
-                'Voice',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+          const Icon(
+            Icons.mic,
+            color: Colors.white,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                // Handle recording action
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Starting voice recording...')),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3a5f9a),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Starting voice recording...')),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF3a5f9a),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  elevation: 2,
-                ),
-                child: const Text(
-                  'Start Recording',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+              child: const Text(
+                'Start Recording',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -505,25 +585,25 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         iconSize: 28,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: _buildCustomIcon('assets/icons/navbar/home.png', 0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mood),
-            label: 'Mood Tracker',
+            icon: _buildCustomIcon('assets/icons/navbar/journal_tracker.png', 1),
+            label: 'Journal',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.article),
-            label: 'Articles',
+            icon: _buildCustomIcon('assets/icons/navbar/article.png', 2),
+            label: 'Article',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.self_improvement),
+            icon: _buildCustomIcon('assets/icons/navbar/meditation.png', 3),
             label: 'Meditation',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.music_note),
+            icon: _buildCustomIcon('assets/icons/navbar/music.png', 4),
             label: 'Music',
           ),
         ],

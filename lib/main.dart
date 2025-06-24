@@ -38,10 +38,12 @@ class MyApp extends StatelessWidget {
           case '/landingpage':
             return MaterialPageRoute(builder: (context) => const LandingPage());
           case '/mood_tracker_journal':
-            return MaterialPageRoute(builder: (context) => const MoodTrackerApp());
+            return MaterialPageRoute(builder: (context) => const MoodTrackerScreen());
           case '/journal_log':
             return MaterialPageRoute(builder: (context) => const JournalLogPage());
-          case '/journal_editor':
+          case 'journal_editor':
+            return MaterialPageRoute(builder: (context) => const JournalEditorScreen());
+          case '/journal_entry':
             // Handle arguments for journal editor
             final args = settings.arguments as Map<String, dynamic>?;
             return MaterialPageRoute(

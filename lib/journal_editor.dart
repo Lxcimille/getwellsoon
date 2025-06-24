@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'landing_page.dart';
+import 'mood_tracker_journal_menu.dart';
+import 'article_menu.dart';
+import 'meditation.dart';
+import 'music.dart';
+import 'package:image_picker/image_picker.dart'; // Import the image_picker package
 import 'models/journalentry.dart';
 
 class JournalEditorScreen extends StatefulWidget {
@@ -22,6 +28,8 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   bool _isUnderline = false;
   Color _textColor = Colors.black;
   double _fontSize = 16.0;
+  final ImagePicker _picker = ImagePicker(); // Initialize the image picker
+  int _selectedIndex = 1; // Set to 1 since this is the journal screen
 
   @override
   void initState() {
@@ -70,6 +78,114 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     return '${days[date.weekday - 1]} - ${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      // Handle the selected image (e.g., display it or save it)
+    }
+  }
+
+  Widget _buildCustomIcon(String assetPath, int index) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: _selectedIndex == index ? Colors.white.withOpacity(0.2) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Image.asset(
+        assetPath,
+        width: 24,
+        height: 24,
+        color: _selectedIndex == index ? Colors.white : Colors.white70,
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xFF4a7ab8),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        iconSize: 28,
+        items: [
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/home.png', 0),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/journal_tracker.png', 1),
+            label: 'Journal',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/article.png', 2),
+            label: 'Article',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/meditation.png', 3),
+            label: 'Meditation',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildCustomIcon('assets/icons/navbar/music.png', 4),
+            label: 'Music',
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // Navigate to different screens based on index
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LandingPage()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MoodTrackerScreen())
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ArticlesApp()),
+        );
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MeditationApp()),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MusicListApp()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +206,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                 const CircleAvatar(
                   radius: 20,
                   backgroundImage: NetworkImage(
-                      'https://storage.googleapis.com/a1aa/image/6fbb0013-9efa-4ff3-36bd-71cabbec48ff.jpg'),
+                      'https://your-valid-image-url.com'), // Replace with a valid URL
                 ),
               ],
             ),
@@ -229,9 +345,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.image, color: Color(0xFF2B5D9F)),
-                            onPressed: () {
-                              // Implement image insertion functionality
-                            },
+                            onPressed: _pickImage, // Call the image picker
                           ),
                         ],
                       ),
@@ -241,44 +355,8 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
               ),
             ),
           ),
-          // Bottom navigation
-          Container(
-            color: const Color(0xFF2B5D9F),
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.home, color: Colors.white, size: 28),
-                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/landingpage',
-                    (route) => false,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.white, size: 28),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.save, color: Colors.white, size: 28),
-                  onPressed: _saveContent,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.coffee, color: Colors.white, size: 28),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: const Icon(Icons.power_settings_new, color: Colors.white, size: 28),
-                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/login',
-                    (route) => false,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Bottom navigation - replaced with custom navigation
+          _buildBottomNavigationBar(),
         ],
       ),
     );

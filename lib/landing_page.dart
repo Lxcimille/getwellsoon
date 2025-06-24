@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/home',
+      initialRoute: '/landingpage',
       routes: {
-        '/home': (context) => const LandingPage(),
-        '/mood_tracker': (context) => const MoodTrackerApp(),
-        '/article': (context) => const ArticlesApp(),
+        '/landingpage': (context) => const LandingPage(),
+        '/mood_tracker_journal': (context) => const MoodTrackerScreen(),
+        '/article_menu': (context) => const ArticlesApp(),
         '/meditation': (context) => const MeditationTimerPage(),
         '/music': (context) => const MusicListApp(),
       },
@@ -91,7 +91,10 @@ class _LandingPageState extends State<LandingPage> {
             title: const Text('Mood Tracker'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/mood_tracker');
+              setState(() {
+                _currentIndex = 1;
+              });
+              Navigator.pushNamed(context, '/mood_tracker_journal');
             },
           ),
           ListTile(
@@ -99,7 +102,10 @@ class _LandingPageState extends State<LandingPage> {
             title: const Text('Journal Log'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/mood_tracker');
+              setState(() {
+                _currentIndex = 1;
+              });
+              Navigator.pushNamed(context, '/journal_log');
             },
           ),
           ListTile(
@@ -107,6 +113,9 @@ class _LandingPageState extends State<LandingPage> {
             title: const Text('Meditation'),
             onTap: () {
               Navigator.pop(context);
+              setState(() {
+                _currentIndex = 3;
+              });
               Navigator.pushNamed(context, '/meditation');
             },
           ),
@@ -115,6 +124,9 @@ class _LandingPageState extends State<LandingPage> {
             title: const Text('Music'),
             onTap: () {
               Navigator.pop(context);
+              setState(() {
+                _currentIndex = 4;
+              });
               Navigator.pushNamed(context, '/music');
             },
           ),
@@ -142,7 +154,10 @@ class _LandingPageState extends State<LandingPage> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/article');
+            setState(() {
+              _currentIndex = 2;
+            });
+            Navigator.pushNamed(context, '/article_menu');
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
@@ -188,7 +203,10 @@ class _LandingPageState extends State<LandingPage> {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/mood_tracker');
+                setState(() {
+                  _currentIndex = 1;
+                });
+                Navigator.pushNamed(context, '/mood_tracker_journal');
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -296,7 +314,10 @@ class _LandingPageState extends State<LandingPage> {
         Positioned.fill(
           child: GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/mood_tracker');
+              setState(() {
+                _currentIndex = 1;
+              });
+              Navigator.pushNamed(context, '/mood_tracker_journal');
             },
             child: Container(color: Colors.transparent),
           ),
@@ -335,7 +356,10 @@ class _LandingPageState extends State<LandingPage> {
   Widget _buildRecommendationCard({required String imageUrl, required String title}) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/article');
+        setState(() {
+          _currentIndex = 2;
+        });
+        Navigator.pushNamed(context, '/article_menu');
       },
       child: Container(
         width: 220,
@@ -375,159 +399,60 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildBottomNavBar() {
-    return Container(
-      height: 60,
-      color: const Color(0xFF2E549A),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          // Home button
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                  color: _currentIndex == 0 ? Colors.white : Colors.white70,
-                  size: 24,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 0;
-                  });
-                  Navigator.pushNamedAndRemoveUntil(
-                    context, 
-                    '/home', 
-                    (route) => false,
-                  );
-                },
-              ),
-              if (_currentIndex == 0)
-                Container(
-                  height: 2,
-                  width: 20,
-                  color: Colors.white,
-                ),
-            ],
-          ),
-          
-          // Journal button
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: _currentIndex == 1 ? Colors.white : Colors.white70,
-                  size: 24,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 1;
-                  });
-                  Navigator.pushNamed(
-                    context,
-                    '/mood_tracker',
-                  );
-                },
-              ),
-              if (_currentIndex == 1)
-                Container(
-                  height: 2,
-                  width: 20,
-                  color: Colors.white,
-                ),
-            ],
-          ),
-          
-          // Articles button
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.bookmark,
-                  color: _currentIndex == 2 ? Colors.white : Colors.white70,
-                  size: 24,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 2;
-                  });
-                  Navigator.pushNamed(
-                    context,
-                    '/article',
-                  );
-                },
-              ),
-              if (_currentIndex == 2)
-                Container(
-                  height: 2,
-                  width: 20,
-                  color: Colors.white,
-                ),
-            ],
-          ),
-          
-          // Meditation button
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.self_improvement,
-                  color: _currentIndex == 3 ? Colors.white : Colors.white70,
-                  size: 24,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 3;
-                  });
-                  Navigator.pushNamed(
-                    context,
-                    '/meditation',
-                  );
-                },
-              ),
-              if (_currentIndex == 3)
-                Container(
-                  height: 2,
-                  width: 20,
-                  color: Colors.white,
-                ),
-            ],
-          ),
-          
-          // Music button
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.music_note,
-                  color: _currentIndex == 4 ? Colors.white : Colors.white70,
-                  size: 24,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 4;
-                  });
-                  Navigator.pushNamed(
-                    context,
-                    '/music',
-                  );
-                },
-              ),
-              if (_currentIndex == 4)
-                Container(
-                  height: 2,
-                  width: 20,
-                  color: Colors.white,
-                ),
-            ],
-          ),
-        ],
-      ),
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: const Color(0xFF2E549A),
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white70,
+      selectedLabelStyle: const TextStyle(fontSize: 12),
+      unselectedLabelStyle: const TextStyle(fontSize: 12),
+      onTap: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+        
+        switch (index) {
+          case 0:
+            // Already on home, no navigation needed
+            Navigator.pushReplacementNamed(context, '/landingpage');
+            break;
+          case 1:
+            Navigator.pushNamed(context, '/mood_tracker_journal');
+            break;
+          case 2:
+            Navigator.pushNamed(context, '/article_menu');
+            break;
+          case 3:
+            Navigator.pushNamed(context, '/meditation');
+            break;
+          case 4:
+            Navigator.pushNamed(context, '/music');
+            break;
+        }
+      },
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.edit),
+          label: 'Journal',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.bookmark),
+          label: 'Articles',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.self_improvement),
+          label: 'Meditation',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.music_note),
+          label: 'Music',
+        ),
+      ],
     );
   }
 }
