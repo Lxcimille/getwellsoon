@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Shared Preferences Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: SharedPrefExample(),
+    );
+  }
+}
+
+class SharedPrefExample extends StatefulWidget {
+  @override
+  _SharedPrefExampleState createState() => _SharedPrefExampleState();
+}
+
+class _SharedPrefExampleState extends State<SharedPrefExample> {
+  TextEditingController _nameController = TextEditingController();
+  String _savedName = "";
+
+  /// ✅ Menyimpan data
+  void _saveName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', _nameController.text);
+    _showSnackbar("Nama disimpan!");
+  }
+
+  /// 📥 Mengambil data
+  void _loadName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _savedName = prefs.getString('name') ?? "Belum ada nama disimpan";
+    });
+  }
+
+  /// ❌ Menghapus data
+  void _deleteName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('name');
+    setState(() {
+      _savedName = "";
+    });
+    _showSnackbar("Nama dihapus!");
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadName(); // Load saat awal
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Shared Preferences Demo")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(labelText: "Masukkan nama"),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _saveName,
+              child: Text("Simpan Nama"),
+            ),
+            ElevatedButton(
+              onPressed: _loadName,
+              child: Text("Ambil Nama"),
+            ),
+            ElevatedButton(
+              onPressed: _deleteName,
+              child: Text("Hapus Nama"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Nama yang disimpan: $_savedName",
+              style: TextStyle(fontSize: 16),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
